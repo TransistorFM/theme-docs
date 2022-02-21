@@ -75,13 +75,11 @@ Simply include another template:
 ```
 
 Include a template with a local variable:
-Note: this doesn't quite work yet w receiver
 ```
 {% include 'episode' with episodes[0] %}
 ```
 
 Include a template for a collection:
-Note: this doesn't quite work yet w receiver, use a for loop for now
 ```
 {% include 'episode' for episodes %}
 ```
@@ -202,7 +200,6 @@ Transistor adds handfull of filters to ease development of websites on our platf
 - asset_url - Used to served assets from the themes asset directory. These files can have a liquid extension (i.e. theme.css.liquid) and the templates will be provided the podcast and settings objects for dynamic content.
 
 - number_to_human_size - Formats the number of bytes into a more understandable representation. e.g. 1500 will result in 1.5 KB.
-Note: This isn't yet available in receiver
 
 - hhmmss - Formats the duration in seconds for display in hh:mm:ss format, skipping hours if the duration is shorter than one hour.
 
