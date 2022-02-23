@@ -86,31 +86,41 @@ Include a template for a collection:
 
 ### Transistor Components
 
-Transistor provides some prebuilt templates to include. You include them with the same <a href="#includes">include</a> mechanism above.
+Transistor provides some prebuilt templates to include. Ther are used via the same <a href="#includes">include</a> mechanism above.
 
-
-**components/player** Note: not yet available<br/>
+#### components/player
 ```
 {% include "components/player" with episode %}
 ```
 The player component provides a functional (via header included JavaScript) and styleable audio player for an episode.
 
-**components/share_links** Note: not yet available<br/>
+#### components/social_links
 ```
-{% include "components/share_links", links: ["apple", "overcast", "spotify"] %}
+{% include "components/social_links", links: "email twitter youtube" %}
 ```
-The share_links component displays a list of players where listeners can subscribe to the show. The `links` parameter is an optional list of players to narrow down the list if you'd like to display fewer links than the show has configured.
+The social_links component displays a list of social media links (along with email and donate links if configured). The `links` parameter is an optional list to narrow down links you'd like to display, if ommitted only configured services will show.
+
+#### components/subscribe_links
+```
+{% include "components/subscribe_links", links: "overcast apple spotify" %}
+```
+The subscribe_links component displays a list of players where listeners can subscribe to the show. The `links` parameter is an optional list to narrow down links you'd like to display, if ommitted only configured players will show.
+
+```
+{% include "components/newsletter" %}
+```
+The newsletter component allows users to signup for the show's newsletter, using one or more or the configured integrations for the show.
 
 ### Objects
 
 The objects provided to <a href="#templates">Liquid templates</a> are consistent and relate to the url path and template. They're cataloged here, but checkout the template section below to see what you'll be provided on what url paths.
 
-**page**
+#### page
 - title - The page title, typically used in the header
 - handle - The id of the page (i.e. about for about page)
 - content - The content to display on the page
 
-**paginate**
+#### paginate
 
 - current_offset - The number of episodes displayed on pages prior to this one
 - current_last_offset - The offset of the last episode on this page
@@ -125,13 +135,13 @@ The objects provided to <a href="#templates">Liquid templates</a> are consistent
 - page_size - Number of episodes displayed per page
 - pages - Number of total pages of episodes
 
-**settings**
+#### settings
 
 Theme settings are configured per theme via <a href="#settings">settings_schema.json, described in detail below</a>. Generally these are color settings available for theme customization. An example might look like:
 - background_color - The configured background_color or default value from settings_schema.json
 - text_color - The configured text_color or default value from settings_schema.json
 
-**podcast**
+#### podcast
 The podcast object represents the top level information for a show.
 - title - Show title
 - artwork - Image url for the show artwork
@@ -164,17 +174,17 @@ The podcast object represents the top level information for a show.
 - assets.custom_favicon - Configured favicon for website
 - assets.transistor_log - A transistor logo
 
-**subscribe_link**
+#### subscribe_link
 - service - Name of service (overcast, spotify, etc...)
 - url - Subscribe url
 - name - Formatted name of service
 
-**social_link**
+#### social_link
 - social - Name of site (medium, twitter, facebook, instagram, youtube, linkedIn)
 - url - Url of site
 - name - Formatted name of site
 
-**episode**
+#### episode
 - title - Episode title
 - type - Episode type (full/trailer/bonus)
 - number - Episode number
