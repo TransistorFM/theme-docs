@@ -106,6 +106,7 @@ The social_links component displays a list of social media links (along with ema
 ```
 The subscribe_links component displays a list of players where listeners can subscribe to the show. The `links` parameter is an optional list to narrow down links you'd like to display, if ommitted only configured players will show.
 
+#### components/newsletter
 ```
 {% include "components/newsletter" %}
 ```
@@ -207,13 +208,17 @@ The podcast object represents the top level information for a show.
 
 Transistor adds handfull of filters to ease development of websites on our platform.
 
-- asset_url - Used to served assets from the themes asset directory. These files can have a liquid extension (i.e. theme.css.liquid) and the templates will be provided the podcast and settings objects for dynamic content.
+#### asset_url
+Used to served assets from the themes asset directory. These files can have a liquid extension (i.e. theme.css.liquid) and the templates will be provided the podcast and settings objects for dynamic content.
 
-- number_to_human_size - Formats the number of bytes into a more understandable representation. e.g. 1500 will result in 1.5 KB.
+#### number_to_human_size
+Formats the number of bytes into a more understandable representation. e.g. 1500 will result in 1.5 KB.
 
-- hhmmss - Formats the duration in seconds for display in hh:mm:ss format, skipping hours if the duration is shorter than one hour.
+#### hhmmss
+Formats the duration in seconds for display in hh:mm:ss format, skipping hours if the duration is shorter than one hour.
 
-- encoded_mailto - Encodes the provided email, prepending a `mailto:` in a way that makes it more difficult for crawlers to find.
+#### encoded_mailto
+Encodes the provided email, prepending a `mailto:` in a way that makes it more difficult for crawlers to find.
 
 ## Templates
 
@@ -221,9 +226,8 @@ Transistor websites are comprised of the following templates. Each template is r
 
 Objects: All pages will have access to the `podcast`, `settings`, and `page` objects.
 
-**Layout**
-
-template: theme/theme.liquid
+#### Layout
+template: layout/theme.liquid
 
 The theme layout is a special template that provides the main wrapper for all other pages in the website. Displaying `content_for_header` and `content_for_layout` objects is required. The header will be used to inject necessary header content (meta tags, favicons, configured analytics providers, and component JavaScript). The layout will accept the rendered content from the current page.
 
@@ -245,50 +249,40 @@ Example:
 </html>
 ```
 
-**Homepage**
-<br/>template: index.liquid
+#### Homepage
+template: index.liquid
 <br/>path: /
 <br/>objects: episodes, paginate
 
-**Episodes List**
-<br/>template: episodes.liquid
+#### Episodes List
+template: episodes.liquid
 <br/>path: /episodes
 <br/>objects: episodes, paginate
 
-**Episode Page**
-<br/>template: episode.liquid
+#### Episode Page
+template: episode.liquid
 <br/>route: episodes/episode-slug
 <br/>objects: episode
 
-**Page**
-<br/>template: page.liquid
+#### Page
+template: page.liquid
 <br/>route: episodes/page-handle
 <br/>*No objects beyond page, podcast, and settings*
 
-**Subscribe**
-<br/>template: subscribe.liquid
+#### Subscribe
+template: subscribe.liquid
 <br/>route: /subscribe
 <br/>*No objects beyond page, podcast, and settings*
 
 ### Assets
-Assets will be placed in the /asset folder in your theme. It's recommended that you package up a single css, and js file named theme.css and theme.js. Reference them by using the <a href="#filters">asset_url</a> filter which will provide the url to the file.
+Assets will be placed in the /asset folder in your theme. It's recommended that you package up a single css, and js file if needed. Reference them by using the <a href="#filters">asset_url</a> filter which will provide the url to the file.
 ```
 <link rel="stylesheet" media="all" href="{{ 'theme.css' | asset_url }}"
 ```
-You'll want to incorporate your theme settings here. <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">CSS variables</a> are highly encouraged. Here's an example `theme.css.liquid` using settings to populate CSS variables:
-```
-:root {
-  --color-background: {{ settings.background_color }};
-  --color-highlight: {{ settings.highlight_color }};
-}
-
-body {
-  background-color: var(--color-background);
-}
-```
+It is recommended to use <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">CSS variables</a> in your layout's head tag to provide theme settings to the rest of the css. <a href="#settings">Read more about settings below.</a>
 
 ### Settings
-The config/settings_schema.json file allows for user configurable settings for your themes. Only colors are supported currently. The default values will be used to render the theme with `receiver` and will be the default values for sites unless a value is selected in the Transistor website configuration.
+The config/settings_schema.json file allows for user configurable settings for your themes. Only colors are supported currently. The default values will be used to render the theme with `receiver` and will be the initial values for a site until configured in the Transistor website configuration.
 ```
 [
   {
@@ -311,4 +305,28 @@ The config/settings_schema.json file allows for user configurable settings for y
     ]
   }
 ]
+```
+For settings used in css, place <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">css variables</a> in a `<style>` tag within the `<head>` of your <a href="#layout">layout/theme.liquid</a>. These will then be accessible in included css files.
+
+layout/theme.liquid
+```
+<head>
+  <title>{{ page.title }}</title>
+  {{ content_for_header }}
+  <style>
+    :root {
+      --color-background: {{ settings.background_color }};
+      --color-highlight: {{ settings.highlight_color }};
+    }
+  </style>
+  <link rel="stylesheet" media="all" href="{{ 'theme.css' | asset_url }}" type="text/css">
+</head>
+...
+```
+
+assets/theme.css
+```
+body {
+  background-color: var(--color-background);
+}
 ```
