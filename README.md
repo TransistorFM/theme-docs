@@ -206,10 +206,10 @@ The podcast object represents the top level information for a show.
 
 ### Filters
 
-Transistor adds handfull of filters to ease development of websites on our platform.
+Transistor adds several filters to the <a href="https://shopify.github.io/liquid/">filters provided by Liquid</a>.
 
 #### asset_url
-Used to served assets from the themes asset directory. These files can have a liquid extension (i.e. theme.css.liquid) and the templates will be provided the podcast and settings objects for dynamic content.
+Used to serve assets from the theme's asset directory. These can be images, svgs, css, or js files. If a cscs file has a liquid exentension (i.e. theme.css.liquid) if will be provided the podcast and settings objects for dynamic evaluation.
 
 #### number_to_human_size
 Formats the number of bytes into a more understandable representation. e.g. 1500 will result in 1.5 KB.
