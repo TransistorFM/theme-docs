@@ -138,9 +138,12 @@ The objects provided to <a href="#templates">Liquid templates</a> are consistent
 
 #### settings
 
-Theme settings are configured per theme via <a href="#settings">settings_schema.json, described in detail below</a>. Generally these are color settings available for theme customization. An example might look like:
+Theme settings are configured per theme via <a href="#settings">settings_schema.json, described in detail below</a>. These settings will be available to all templates.
+
+An example might look like:
 - background_color - The configured background_color or default value from settings_schema.json
 - text_color - The configured text_color or default value from settings_schema.json
+- show_sidebar - The configured true/false value or default from settings_schema.json
 
 #### podcast
 The podcast object represents the top level information for a show.
@@ -282,11 +285,19 @@ Assets will be placed in the /asset folder in your theme. It's recommended that 
 It is recommended to use <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">CSS variables</a> in your layout's head tag to provide theme settings to the rest of the css. <a href="#settings">Read more about settings below.</a>
 
 ### Settings
-The config/settings_schema.json file allows for user configurable settings for your themes. Only colors are supported currently. The default values will be used to render the theme with `receiver` and will be the initial values for a site until configured in the Transistor website configuration.
+The config/settings_schema.json file allows for user configurable settings. Each settings group will be presented in the website configuration, titled with the group's name.
+
+Types include:
+* `color` - Presents a colorpicker for and represents an HTML color code (#FFFFFF)
+* `checkbox` - Presents a checkbox, and evaluates to a boolean value in a template allowing usage like `{% if settings.name_of_checkbox %}content{% endif %}`
+
+The `label` and `info` are used to describe the setting in the website configuration. The `default` value will represent the value prior to user configuration.
+
+Note: `receiver` will use default values from settings_schema.json for local development. Set them to your desired defaults when completing the theme.
 ```
 [
   {
-    "name": "Colors",
+    "name": "Website Colors",
     "settings": [
       {
         "type": "color",
@@ -303,9 +314,22 @@ The config/settings_schema.json file allows for user configurable settings for y
         "info": "Color for highlighted theme elements"
       },
     ]
+  },
+  {
+    "name": "Content Toggles",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_nav_sidebar",
+        "label": "Show the navigation sidebar",
+        "default": true
+      }
+    ]
   }
 ]
 ```
+![This is an image](images/site_config.png)
+
 For settings used in css, place <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">css variables</a> in a `<style>` tag within the `<head>` of your <a href="#layout">layout/theme.liquid</a>. These will then be accessible in included css files.
 
 layout/theme.liquid
