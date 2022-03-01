@@ -214,14 +214,26 @@ Transistor adds several filters to the <a href="https://shopify.github.io/liquid
 #### asset_url
 Used to serve assets from the theme's asset directory. These can be images, svgs, css, or js files. If a cscs file has a liquid exentension (i.e. theme.css.liquid) if will be provided the podcast and settings objects for dynamic evaluation.
 
-#### number_to_human_size
-Formats the number of bytes into a more understandable representation. e.g. 1500 will result in 1.5 KB.
+#### brightness
+Provided a html color code, returns the brightness as an integer value between 0 and 255.
+
+#### encoded_mailto
+Encodes the provided email, prepending a `mailto:` in a way that makes it more difficult for crawlers to find.
+
+#### greatest_contrast
+Provided a base color, and a list of secondary colors, it will return the color with the greatest contrast to the base. Used to provide text/overlay colors with enough contrast.
+example usage:
+```
+<style>
+  --color-text: {{ settings.background_color | greatest_contrast: "#FFFFFF", "#131E36" }}
+</style>
+```
 
 #### hhmmss
 Formats the duration in seconds for display in hh:mm:ss format, skipping hours if the duration is shorter than one hour.
 
-#### encoded_mailto
-Encodes the provided email, prepending a `mailto:` in a way that makes it more difficult for crawlers to find.
+#### number_to_human_size
+Formats the number of bytes into a more understandable representation. e.g. 1500 will result in 1.5 KB.
 
 ## Templates
 
