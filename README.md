@@ -124,15 +124,18 @@ The objects provided to <a href="#templates">Liquid templates</a> are consistent
 #### paginate
 
 - current_offset - The number of episodes displayed on pages prior to this one
+- current_first_offset - The offset of the first episode on this page
 - current_last_offset - The offset of the last episode on this page
 - current_page - The current page number
 - items - The total number of episodes for the show
 - next.url - A url containing parameters for the next page
 - next.title - If there are more pages available, will contain `Next Page »`
 - next.is_link - True if there are more episode pages
+- next.key - Returns the key for <a href="#localization">localizing</a> "Next Page"
 - previous.url - A url containing parameters for the previous page
 - previous.title - If we are on page 2 or higher, will contain `« Previous Page`
 - previous.is_link - True if we aren't on page 1
+- previous.key - Returns the key for <a href="#localization">localizing</a> "Previous Page"
 - page_size - Number of episodes displayed per page
 - pages - Number of total pages of episodes
 
@@ -197,6 +200,7 @@ The podcast object represents the top level information for a show.
 - unpublished
 - published - Episode published date/time
 - duration - Episode duration in seconds
+- minutes - Episode duration in minutes
 - summary - Episode summary
 - artwork -  Image url for episode artwork
 - link_url - The url link for an episode, configured by various website rules
