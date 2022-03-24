@@ -141,7 +141,7 @@ The objects provided to <a href="#templates">Liquid templates</a> are consistent
 
 #### settings
 
-Theme settings are configured per theme via <a href="#settings">settings_schema.json, described in detail below</a>. These settings will be available to all templates.
+Theme settings are configured per theme via <a href="#settings-schema">settings_schema.json</a>, described in detail below. These settings will be available to all templates.
 
 An example might look like:
 - background_color - The configured background_color or default value from settings_schema.json
@@ -298,9 +298,9 @@ Assets will be placed in the /asset folder in your theme. It's recommended that 
 ```
 <link rel="stylesheet" media="all" href="{{ 'theme.css' | asset_url }}"
 ```
-It is recommended to use <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">CSS variables</a> in your layout's head tag to provide theme settings to the rest of the css. <a href="#settings">Read more about settings below.</a>
+It is recommended to use <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">CSS variables</a> in your layout's head tag to provide theme settings to the rest of the css. <a href="#settings-schema">Read more about settings below.</a>
 
-### Settings
+### Settings Schema
 The config/settings_schema.json file allows for user configurable settings. Each settings group will be presented in the website configuration, titled with the group's name.
 
 Types include:
