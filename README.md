@@ -120,6 +120,7 @@ The objects provided to <a href="#templates">Liquid templates</a> are consistent
 - title - The page title, typically used in the header
 - handle - The id of the page (i.e. about for about page)
 - content - The content to display on the page
+- description - The meta tag compatible description for the current page
 
 #### paginate
 
