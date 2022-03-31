@@ -146,14 +146,14 @@ The objects provided to <a href="#templates">Liquid templates</a> are consistent
 - current_last_offset - The offset of the last episode on this page
 - current_page - The current page number
 - items - The total number of episodes for the show
-- next.url - A url containing parameters for the next page
-- next.title - If there are more pages available, will contain `Next Page »`
+- next.url - A url containing parameters for the next page/episode
+- next.title - If there are more pages available, will contain `Next Page »` or `Next Episode »`
 - next.is_link - True if there are more episode pages
-- next.key - Returns the key for <a href="#localization">localizing</a> "Next Page"
-- previous.url - A url containing parameters for the previous page
-- previous.title - If we are on page 2 or higher, will contain `« Previous Page`
+- next.key - Returns the key for <a href="#localization">localizing</a> "Next Page" or "Next Episode"
+- previous.url - A url containing parameters for the previous page/episode
+- previous.title - If we are on page 2 or higher, will contain `« Previous Page` or `« Previous Episode`
 - previous.is_link - True if we aren't on page 1
-- previous.key - Returns the key for <a href="#localization">localizing</a> "Previous Page"
+- previous.key - Returns the key for <a href="#localization">localizing</a> "Previous Page" or "Previous Episode"
 - page_size - Number of episodes displayed per page
 - pages - Number of total pages of episodes
 
@@ -299,7 +299,7 @@ template: episodes.liquid
 #### Episode Page
 template: episode.liquid
 <br/>route: episodes/episode-slug
-<br/>objects: episode
+<br/>objects: episode, paginate
 
 #### Page
 template: page.liquid
