@@ -88,6 +88,19 @@ Include a template for a collection:
 
 Transistor provides some some components to use for common needs, and are used via the same <a href="#includes">include</a> mechanism above.
 
+#### components/navigation
+```
+{% include "components/navigation", links: linklists.header %}
+{% include "components/navigation", links: linklists.footer %}
+```
+The navigation component generates anchor tags for the named list of links provided by the <a href="#linklist">linklist object</a>. The component will always include localized anchors for Home, Episodes, and Subscribe. It will also include user defined pages and links between the Episodes and Subscribe links.
+
+#### components/newsletter
+```
+{% include "components/newsletter" %}
+```
+The newsletter component allows users to signup for the show's newsletter, using one or more or the configured integrations for the show.
+
 #### components/player
 ```
 {% include "components/player" with episode %}
@@ -106,17 +119,21 @@ The social_links component displays a list of social media links (along with ema
 ```
 The subscribe_links component displays a list of players where listeners can subscribe to the show. The `links` parameter is an optional list to narrow down links you'd like to display, if ommitted only configured players will show.
 
-#### components/newsletter
-```
-{% include "components/newsletter" %}
-```
-The newsletter component allows users to signup for the show's newsletter, using one or more or the configured integrations for the show.
-
 ### Objects
 
 The objects provided to <a href="#templates">Liquid templates</a> are consistent and relate to the url path and template. They're cataloged here, but checkout the template section below to see what you'll be provided on what url paths.
 
+#### linklist
+- header - Contains a list of header <a href="#link">links</a> that represent external urls and pages
+- footer - Contains a list of footer <a href="#link">links</a> that represent external urls and pages
+
+#### link
+- title - The display text for the link
+- url - The url or path representing the location for the link
+- current - A true/false value to indicate if the user is currently on this page, useful for css treatment
+
 #### page
+
 - title - The page title, typically used in the header
 - handle - The id of the page (i.e. about for about page)
 - content - The content to display on the page
@@ -244,7 +261,7 @@ Formats the number of bytes into a more understandable representation. e.g. 1500
 
 Transistor websites are comprised of the following templates. Each template is rendered at paths listed below and provided the appropriate liquid objects to render.
 
-Objects: All pages will have access to the `podcast`, `settings`, and `page` objects.
+Objects: All pages will have access to the `podcast`, `settings`, `page`, and `linklist` objects.
 
 #### Layout
 template: layout/theme.liquid
