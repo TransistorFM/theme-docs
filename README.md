@@ -93,7 +93,7 @@ Transistor provides some some components to use for common needs, and are used v
 {% include "components/navigation", links: linklists.header %}
 {% include "components/navigation", links: linklists.footer %}
 ```
-The navigation component generates anchor tags for the named list of links provided by the <a href="#linklist">linklist object</a>. The component will always include localized anchors for Home, Episodes, and Subscribe. It will also include user defined pages and links between the Episodes and Subscribe links.
+The navigation component generates anchor tags for the named list of links provided by the <a href="#linklist">linklist object</a>. The component will always include localized anchors for Home, Episodes, Subscribe, and People (if people have been created for the podcast). It will also include user defined pages and links between the Episodes and Subscribe links.
 
 #### components/newsletter
 ```
@@ -106,6 +106,12 @@ The newsletter component allows users to signup for the show's newsletter, using
 {% include "components/player" with episode %}
 ```
 The player component provides a functional and styleable audio player for an episode.
+
+#### components/search
+```
+{% include "components/search" %}
+```
+The search component provides a submittable searchbox for episode search. Users will be routed to a paginated search results page that uses the <a href="#episodes-list">episodes.liquid</a> template.
 
 #### components/social_links
 ```
@@ -123,24 +129,33 @@ The subscribe_links component displays a list of players where listeners can sub
 
 The objects provided to <a href="#templates">Liquid templates</a> are consistent and relate to the url path and template. They're cataloged here, but checkout the template section below to see what you'll be provided on what url paths.
 
-#### linklist
-- header - Contains a list of header <a href="#link">links</a> that represent external urls and pages
-- footer - Contains a list of footer <a href="#link">links</a> that represent external urls and pages
-
-#### link
-- title - The display text for the link
-- url - The url or path representing the location for the link
-- current - A true/false value to indicate if the user is currently on this page, useful for css treatment
+#### episode
+- title - Episode title
+- type - Episode type (full/trailer/bonus)
+- number - Episode number
+- season - Episode season
+- status - Episode status
+- unpublished
+- published - Episode published date/time
+- duration - Episode duration in seconds
+- minutes - Episode duration in minutes
+- summary - Episode summary
+- artwork -  Image url for episode artwork
+- link_url - The url link for an episode, configured by various website rules
+- media_url - The location of the audio for this episode
+- path - A relative url path for the episode
+- bytesize - Episode byte size
+- has_transcript - Does the episode has a transcript available
+- content.notes (only provided for episode.liquid) - Show notes for the episode
+- content.transcript (only provided for episode.liquid) - Episode transcript, if it exists
 
 #### page
-
 - title - The page title, typically used in the header
 - handle - The id of the page (i.e. about for about page)
 - content - The content to display on the page
 - description - The meta tag compatible description for the current page
 
 #### paginate
-
 - current_offset - The number of episodes displayed on pages prior to this one
 - current_first_offset - The offset of the first episode on this page
 - current_last_offset - The offset of the last episode on this page
@@ -157,14 +172,13 @@ The objects provided to <a href="#templates">Liquid templates</a> are consistent
 - page_size - Number of episodes displayed per page
 - pages - Number of total pages of episodes
 
-#### settings
-
-Theme settings are configured per theme via <a href="#settings-schema">settings_schema.json</a>, described in detail below. These settings will be available to all templates.
-
-An example might look like:
-- background_color - The configured background_color or default value from settings_schema.json
-- text_color - The configured text_color or default value from settings_schema.json
-- show_sidebar - The configured true/false value or default from settings_schema.json
+#### person
+- name - The name of the person
+- path - The url to the person page of the website
+- role - The defined role of the person (Host, Guest, Editor, etc...)
+- image - The url for an image
+- bio - The biography
+- social_links - List of <a href="#social_link">social_link</a> objects. Including website, twitter, instagram, linkedIn, etc...
 
 #### podcast
 The podcast object represents the top level information for a show.
@@ -186,7 +200,7 @@ The podcast object represents the top level information for a show.
 - first_episode - First episode for the show
 - recommended_episode - The configured recommended episode
 - email - The email address for the show
-- subscribe_links - List of social_link objects (see below)
+- social_links - List of <a href="#social_link">social_link</a> objects
 - subscribe_links - List of subscribe_link objects (see below)
 - hide_branding - If user requested to hide transistor branding
 - donate.url - A donation link if configured
@@ -199,35 +213,32 @@ The podcast object represents the top level information for a show.
 - assets.custom_favicon - Configured favicon for website
 - assets.transistor_log - A transistor logo
 
-#### subscribe_link
-- service - Name of service (overcast, spotify, etc...)
-- url - Subscribe url
-- name - Formatted name of service
+#### settings
+Theme settings are configured per theme via <a href="#settings-schema">settings_schema.json</a>, described in detail below. These settings will be available to all templates.
+
+An example might look like:
+- background_color - The configured background_color or default value from settings_schema.json
+- text_color - The configured text_color or default value from settings_schema.json
+- show_sidebar - The configured true/false value or default from settings_schema.json
 
 #### social_link
 - social - Name of site (medium, twitter, facebook, instagram, youtube, linkedIn)
 - url - Url of site
 - name - Formatted name of site
 
-#### episode
-- title - Episode title
-- type - Episode type (full/trailer/bonus)
-- number - Episode number
-- season - Episode season
-- status - Episode status
-- unpublished
-- published - Episode published date/time
-- duration - Episode duration in seconds
-- minutes - Episode duration in minutes
-- summary - Episode summary
-- artwork -  Image url for episode artwork
-- link_url - The url link for an episode, configured by various website rules
-- media_url - The location of the audio for this episode
-- path - A relative url path for the episode
-- bytesize - Episode byte size
-- has_transcript - Does the episode has a transcript available
-- content.notes (only provided for episode.liquid) - Show notes for the episode
-- content.transcript (only provided for episode.liquid) - Episode transcript, if it exists
+#### subscribe_link
+- service - Name of service (overcast, spotify, etc...)
+- url - Subscribe url
+- name - Formatted name of service
+
+#### link
+- title - The display text for the link
+- url - The url or path representing the location for the link
+- current - A true/false value to indicate if the user is currently on this page, useful for css treatment
+
+#### linklist
+- header - Contains a list of header <a href="#link">links</a> that represent external urls and pages
+- footer - Contains a list of footer <a href="#link">links</a> that represent external urls and pages
 
 ### Filters
 
@@ -291,9 +302,9 @@ template: index.liquid
 <br/>path: /
 <br/>objects: episodes, paginate
 
-#### Episodes List
+#### Episodes List / Search Results Page
 template: episodes.liquid
-<br/>path: /episodes
+<br/>path: /episodes and /search
 <br/>objects: episodes, paginate
 
 #### Episode Page
@@ -310,6 +321,16 @@ template: page.liquid
 template: subscribe.liquid
 <br/>route: /subscribe
 <br/>*No objects beyond page, podcast, and settings*
+
+#### People
+template: people.liquid
+<br/>route: /people
+<br/>objects: people
+
+#### Person
+template: person.liquid
+<br/>route: person/person-slug
+<br/>objects: person, episodes, paginate
 
 ### Assets
 Assets will be placed in the /asset folder in your theme. It's recommended that you package up a single css, and js file if needed. Reference them by using the <a href="#filters">asset_url</a> filter which will provide the url to the file.
