@@ -262,6 +262,23 @@ example usage:
 </style>
 ```
 
+#### force_contrast
+Provided a base color, and one comparison color, it will return a variant of the comparison color that is brightened (or darkened) to contrast with the base color.
+example usage:
+```
+<style>
+  --color-text: {{ settings.background_color | force_contrast: settings.text_color }}
+</style>
+```
+
+#### to_rgb
+Convert a color code to RGB format.
+```
+<style>
+  --color-white: {{ '#FFF' | to_rgb }}
+</style>
+```
+
 #### hhmmss
 Formats the duration in seconds for display in hh:mm:ss format, skipping hours if the duration is shorter than one hour.
 
