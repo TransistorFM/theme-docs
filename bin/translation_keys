@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+# Regenerates the translation key list in README.md from the English locale file.
+# Usage: bin/translation_keys path/to/en.yml
+require "yaml"
+
+START_MARKER = "<!-- translation-keys:start -->".freeze
+END_MARKER = "<!-- translation-keys:end -->".freeze
+
+root = File.expand_path("..", __dir__)
+locale_file = ARGV[0] || abort("Usage: bin/translation_keys path/to/en.yml")
+readme = File.join(root, "README.md")
+
+def flatten(hash, prefix = nil)
+  hash.flat_map do |key, value|
+    path = [prefix, key].compact.join(".")
+    value.is_a?(Hash) ? flatten(value, path) : [[path, value]]
+  end
+end
+
+websites = YAML.load_file(locale_file, aliases: true).fetch("en").fetch("websites")
+lines = flatten(websites).map { |key, text| "#{key.ljust(36)} #{text}" }
+block = [START_MARKER, "```", *lines, "```", END_MARKER].join("\n")
+
+content = File.read(readme)
+abort "Markers not found in README.md" unless content.include?(START_MARKER) && content.include?(END_MARKER)
+
+pattern = /#{Regexp.escape(START_MARKER)}.*#{Regexp.escape(END_MARKER)}/m
+File.write(readme, content.sub(pattern) { block })
+puts "Wrote #{lines.size} keys to README.md"
