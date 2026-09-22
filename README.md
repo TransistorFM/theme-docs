@@ -713,9 +713,18 @@ A `theme_info` group describes the theme itself, and declares optional `features
   "theme_name": "My Theme",
   "theme_author": "Me",
   "theme_version": "1.0.0",
-  "features": ["podroll"]
+  "features": ["podroll"],
+  "color_roles": {
+    "background": "background_color",
+    "text": "text_color",
+    "primary_button": ["highlight_color", "link_color"],
+    "on_primary_button": "player_color"
+  }
 }
 ```
+
+#### Color roles
+`color_roles` in `theme_info` tags color settings with a role: `background`, `text`, `primary_button` (links, buttons, the player) or `on_primary_button` (text on those). Each role takes an id or a list of ids. Roles only affect the website configuration: they pick the three colors shown in each <a href="#settings-data">preset</a> swatch.
 
 Note: `receiver` will use default values from settings_schema.json for local development. Set them to your desired defaults when completing the theme.
 ```
@@ -753,6 +762,26 @@ Note: `receiver` will use default values from settings_schema.json for local dev
 ]
 ```
 ![This is an image](images/site_config.png)
+
+### Settings Data
+`config/settings_data.json` ships named color presets. Each preset maps `color` setting ids to values; any subset of the theme's colors works, and other ids are ignored.
+```
+{
+  "presets": {
+    "Paper": {
+      "background_color": "#FFFFFF",
+      "text_color": "#1E293B",
+      "link_color": "#0369A1"
+    },
+    "Midnight": {
+      "background_color": "#0F172A",
+      "text_color": "#F8FAFC",
+      "link_color": "#FBBF24"
+    }
+  }
+}
+```
+Presets show up as a row of swatches in the website configuration, named on hover. Picking one fills the matching color pickers as a starting point; the owner can adjust and save from there. The choice itself isn't stored, so presets can be renamed or removed freely.
 
 For settings used in css, place <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">css variables</a> in a `<style>` tag within the `<head>` of your <a href="#layout">layout/theme.liquid</a>. These will then be accessible in included css files.
 
