@@ -580,6 +580,8 @@ share.rss_feed_url                   RSS Feed URL
 share.more_options                   More Options
 share.copy_url                       Copy URL
 share.copied                         Copied!
+share.watch                          Watch
+share.listen                         Listen
 share.content_attribution_notice     All audio, artwork, episode descriptions and notes are property of %{author}, for %{title}, and published with permission by Transistor, Inc.
 player.play                          Play
 player.pause                         Pause
