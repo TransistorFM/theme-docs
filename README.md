@@ -771,17 +771,19 @@ Note: `receiver` will use default values from settings_schema.json for local dev
     "Paper": {
       "background_color": "#FFFFFF",
       "text_color": "#1E293B",
-      "link_color": "#0369A1"
+      "link_color": "#0369A1",
+      "tags": ["light", "high-contrast"]
     },
     "Midnight": {
       "background_color": "#0F172A",
       "text_color": "#F8FAFC",
-      "link_color": "#FBBF24"
+      "link_color": "#FBBF24",
+      "tags": ["dark"]
     }
   }
 }
 ```
-Presets show up as a row of swatches in the website configuration, named on hover. Picking one fills the matching color pickers as a starting point; the owner can adjust and save from there. The choice itself isn't stored, so presets can be renamed or removed freely.
+Optional `tags` label a preset: `light`, `dark` or `high-contrast`. Presets show up as a row of swatches in the website configuration, named and labeled on hover. Picking one fills the matching color pickers as a starting point; the owner can adjust and save from there. The choice itself isn't stored, so presets can be renamed or removed freely.
 
 For settings used in css, place <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">css variables</a> in a `<style>` tag within the `<head>` of your <a href="#layout">layout/theme.liquid</a>. These will then be accessible in included css files.
 
