@@ -40,11 +40,18 @@ Receiver uses your API key to authenticate to Transistor. Your API key can be vi
 
 **Subdomain**
 
-In the website settings for your show you can chose a subdomain, this tells receiver what show it will be rendering.
+In the website settings for your show you can choose a subdomain, this tells receiver what show it will be rendering. A full URL (e.g. `--subdomain https://myshow.transistor.network`) points receiver at a different host instead of transistor.fm.
 
 **Port**
 
 The port the receiver server runs on by default is 8080. Add a `--port 1234` to change to another port if desired.
+
+**Network mode**
+
+Transistor networks (a landing site for several shows) use a separate theme with its own templates. Run receiver with `--network` and the network's subdomain to develop one; without the flag receiver runs in show mode.
+```
+./receiver server --network --api_key your_api_key --subdomain your_network_subdomain
+```
 
 <hr>
 
@@ -809,3 +816,10 @@ body {
   background-color: var(--color-background);
 }
 ```
+
+## Gotchas
+
+* Liquid treats `""` as truthy, so `{% if page.heading %}` passes on an empty string. Use `!= blank` for user-set strings.
+* `{{ field | default: 'some.key' | t }}` translates the user's own text when the field is set and renders `Translation missing: ...`. Render the field when present and translate only the fallback.
+* Platform icons carry their brand colour as a `fill=` attribute on the `<svg>`; a CSS `fill` on that element overrides it.
+* `content_for_header` loads the platform script (Turbo and Alpine) deferred, after your own theme script. Pages change without a full reload, so initialise on `transistor.loadingEvent` (`turbo:load`) rather than `DOMContentLoaded`, stop media on `turbo:before-cache`, and register Alpine state as `window.*` globals rather than `Alpine.data()`.
