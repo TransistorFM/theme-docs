@@ -195,6 +195,7 @@ The objects provided to <a href="#templates">Liquid templates</a> are consistent
 - video_service - The service hosting the episode's linked video (i.e. youtube), if one exists
 - video_id - The id of the linked video on the video_service
 - video_thumbnail - Image url for the episode's video thumbnail, if one was uploaded
+- video_thumbnail_large - Large (up to 4K) Image url for the episode's video thumbnail, if one was uploaded
 - hls_manifest_url - The HLS manifest (.m3u8) for an episode with Transistor hosted video. Blank for audio-only episodes. Safari plays HLS natively, other browsers need a library like <a href="https://github.com/video-dev/hls.js">hls.js</a>
 - content.notes (only provided for episode.liquid) - Show notes for the episode
 - content.transcript (only provided for episode.liquid) - Episode transcript, if it exists
@@ -247,6 +248,7 @@ Example (values are illustrative). Properties without a value are `nil`, so `{% 
   "video_service": "youtube",
   "video_id": "dQw4w9WgXcQ",
   "video_thumbnail": null,
+  "video_thumbnail_large": null,
   "hls_manifest_url": null
 }
 ```
