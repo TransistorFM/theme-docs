@@ -20,10 +20,19 @@ Mac (ARM)
 curl https://transistorfm.s3.amazonaws.com/receiver/receiver-arm64 -o receiver
 chmod +x receiver
 ```
+Linux (x86_64)
+```
+curl https://transistorfm.s3.amazonaws.com/receiver/receiver-linux-amd64 -o receiver
+chmod +x receiver
+```
+Linux (ARM)
+```
+curl https://transistorfm.s3.amazonaws.com/receiver/receiver-linux-arm64 -o receiver
+chmod +x receiver
+```
 Windows
 ```
 curl https://transistorfm.s3.amazonaws.com/receiver/receiver-windows.exe -o receiver.exe
-chmod +x receiver
 ```
 
 ### Running
