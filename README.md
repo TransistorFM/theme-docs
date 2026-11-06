@@ -57,9 +57,10 @@ The port the receiver server runs on by default is 8080. Add a `--port 1234` to 
 
 **Network mode**
 
-Transistor networks (a landing site for several shows) use a separate theme with its own templates. Run receiver with `--network` and the network's subdomain to develop one; without the flag receiver runs in show mode.
+Transistor networks (a landing site for several shows) use a separate theme with its own templates and objects (see <a href="#network-themes">Network Themes</a>). Generate a network theme skeleton with `--network`, then run the server with the network's subdomain:
 ```
-./receiver server --network --api_key your_api_key --subdomain your_network_subdomain
+./receiver new --network
+./receiver server --api_key your_api_key --subdomain your_network_subdomain
 ```
 
 <hr>
@@ -175,7 +176,7 @@ The "Broadcast by Transistor" badge. Wrap it in `{% unless podcast.hide_branding
 
 ### Objects
 
-The objects provided to <a href="#templates">Liquid templates</a> are consistent and relate to the url path and template. They're cataloged here, but checkout the template section below to see what you'll be provided on what url paths.
+The objects provided to <a href="#templates">Liquid templates</a> are consistent and relate to the url path and template. They're cataloged here, but checkout the template section below to see what you'll be provided on what url paths. Only the properties listed exist; an unknown one renders blank without an error, so don't invent them.
 
 #### episode
 - title - Episode title
@@ -207,7 +208,7 @@ The objects provided to <a href="#templates">Liquid templates</a> are consistent
 - video_thumbnail_large - Large (up to 4K) Image url for the episode's video thumbnail, if one was uploaded
 - hls_manifest_url - The HLS manifest (.m3u8) for an episode with Transistor hosted video. Blank for audio-only episodes. Safari plays HLS natively, other browsers need a library like <a href="https://github.com/video-dev/hls.js">hls.js</a>
 - content.notes (only provided for episode.liquid) - Show notes for the episode
-- content.transcript (only provided for episode.liquid) - Episode transcript, if it exists
+- content.transcript - Episode transcript. Only provided at `{{ episode.path }}/transcript`, which renders episode.liquid with a `page.handle` of `transcript`
 - people (only provided for episode.liquid) - List of <a href="#person">person</a> objects for the episode
 
 To display Bluesky comments on an episode page, include a `bluesky-comments` section and the common JavaScript will fill it in:
@@ -265,7 +266,8 @@ Example (values are illustrative). Properties without a value are `nil`, so `{% 
 
 #### page
 - title - The page title, typically used in the header
-- handle - The id of the page (i.e. about for about page)
+- handle - The id of the page: `index`, `episodes`, `search`, `episode`, `transcript`, `subscribe`, `people`, `person`, `supporters`, `recommended_shows`, or the slug of a custom page (i.e. about)
+- heading - The optional heading of a custom page
 - content - The content to display on the page
 - description - The meta tag compatible description for the current page
 
@@ -332,6 +334,7 @@ The podcast object represents the top level information for a show.
 - donate.url - A donation link if configured
 - donate.text - Text for donation link
 - content.copyright - Copyright text
+- content.intro - Configurable Site Intro (html), available on every page
 - content.footer - Configurable custom footer content
 - content.head - Configurable custom content for the head tag
 - custom_css - Configurable custom css
@@ -341,29 +344,6 @@ The podcast object represents the top level information for a show.
 - assets.social_media - Uploaded social sharing image
 - assets.transistor_logo - A transistor logo
 - assets.common_css / assets.common_js - Styles and JavaScript for the Transistor components
-
-#### default_episode
-The <a href="#episode">episode</a> most relevant to the current page, useful for a featured player. It's the current episode on episode.liquid, the first listed episode on episodes.liquid, and `podcast.default_episode` everywhere else.
-
-#### recommended_show
-- title - Show title
-- url - The url for the show
-- feed_url - The location of the rss feed
-- image_urls.cover / image_urls.full / image_urls.medium / image_urls.thumb - Artwork urls at various sizes
-
-#### supporter
-- name - The name of the supporter
-- image - The url for an image
-
-#### campaign
-- name - The name of the campaign
-- intro - Text describing the campaign
-- url - Where listeners can go to support the show
-- billing_period - A <a href="#localization">localization</a> key for the billing period
-
-#### theme
-- name - The name of the current theme
-- preview - True when the theme is being previewed rather than being the website's configured theme
 
 Example (values are illustrative, episode objects and assets shortened):
 ```
@@ -406,6 +386,29 @@ Example (values are illustrative, episode objects and assets shortened):
 }
 ```
 `podcast.keywords` is a comma separated string (empty when there are none), while `episode.keywords` is a list. Lists that would be empty (`recommended_shows`, `assets.custom_favicon`) are `nil` rather than `[]`, except `social_links` and `subscribe_links` which are always lists.
+
+#### default_episode
+The <a href="#episode">episode</a> most relevant to the current page, useful for a featured player. It's the current episode on episode.liquid, the first listed episode on episodes.liquid, and `podcast.default_episode` everywhere else.
+
+#### recommended_show
+- title - Show title
+- url - The url for the show
+- feed_url - The location of the rss feed
+- image_urls.cover / image_urls.full / image_urls.medium / image_urls.thumb - Artwork urls at various sizes
+
+#### supporter
+- name - The name of the supporter
+- image - The url for an image
+
+#### campaign
+- name - The name of the campaign
+- intro - Text describing the campaign
+- url - Where listeners can go to support the show
+- billing_period - A <a href="#localization">localization</a> key for the billing period
+
+#### theme
+- name - The name of the current theme
+- preview - True when the theme is being previewed rather than being the website's configured theme
 
 #### settings
 Theme settings are configured per theme via <a href="#settings-schema">settings_schema.json</a>, described in detail below. These settings will be available to all templates.
@@ -503,7 +506,7 @@ Converts a html color code to space separated rgb values, e.g. #FFFFFF will resu
 ### Localization
 Websites can be configured with a language. Transistor provides translations for common website text (navigation, player controls, pagination, people roles, etc...) via the <a href="#t--translate">t</a> filter, and dates via the <a href="#l--localize">l</a> filter. Objects with a `key` property (like `paginate.next.key`) or that return a key (like `person.role` and `campaign.billing_period`) are meant to be passed through `t`.
 
-Only the keys below exist, shown with their English text. A key that isn't listed renders "Translation missing", so don't invent keys. Text your theme needs that isn't covered here has to be written into the theme, and won't be translated. `%{name}` values are interpolated: `{{ 'share.listen_to' | t: title: podcast.title, name: link.name }}`.
+Only the keys below exist, shown with their English text. A key that isn't listed renders "Translation missing", so don't invent keys. Text your theme needs that isn't covered here has to be written into the theme, and won't be translated. `%{name}` values are interpolated: `{{ 'share.listen_to' | t: title: podcast.title, name: link.name }}`. Append `?locale=fr` to any url to preview another language.
 
 <!-- translation-keys:start -->
 ```
@@ -517,6 +520,10 @@ navigation.recommended_shows         Recommended Shows
 navigation.subscribe                 Subscribe
 navigation.supporters                Supporters
 navigation.shows                     Shows
+navigation.skip_to_content           Skip to content
+navigation.menu                      Menu
+navigation.open_menu                 Open menu
+navigation.close_menu                Close menu
 mailinglist.headline                 Join our newsletter
 mailinglist.input                    Your email address
 mailinglist.submit                   Subscribe
@@ -542,6 +549,10 @@ episode.season                       Season
 episode.video                        Episode Video
 episode.episode_of                   Episode %{number} of
 episode.search_placeholder           Search episodes...
+episode.preview                      Preview
+episode.trailer                      Trailer
+episode.bonus                        Bonus
+episode.coming_soon_heading          Coming soon
 people.headline                      Creators and Guests
 people.appears_in                    Appears in
 people.roles.guest                   Guest
@@ -601,6 +612,7 @@ share.copied                         Copied!
 share.watch                          Watch
 share.listen                         Listen
 share.content_attribution_notice     All audio, artwork, episode descriptions and notes are property of %{author}, for %{title}, and published with permission by Transistor, Inc.
+share.find_us_online                 Find us online
 player.play                          Play
 player.pause                         Pause
 player.rewind                        Rewind 10 seconds
@@ -613,6 +625,10 @@ player.speed                         Change Playback Speed
 player.speed_label                   Change Playback Speed (currently ${displaySpeed} times speed)
 player.minimize                      Minimize Player
 player.adjust_volume                 Adjust volume
+player.close                         Close
+player.audio_player                  Audio player
+player.loading                       Loading audio
+player.video_error                   Video unavailable.
 comments.headline                    Comments and Discussion
 comments.loading                     Loading comments&hellip;
 comments.view_and_reply              View post and reply on Bluesky
@@ -708,9 +724,9 @@ template: recommended_shows.liquid
 Only available when the theme declares the `podroll` feature in <a href="#settings-schema">settings_schema.json</a>.
 
 ### Assets
-Assets will be placed in the /asset folder in your theme. It's recommended that you package up a single css, and js file if needed. Reference them by using the <a href="#filters">asset_url</a> filter which will provide the url to the file.
+Assets will be placed in the /assets folder in your theme. It's recommended that you package up a single css, and js file if needed. Reference them by using the <a href="#filters">asset_url</a> filter which will provide the url to the file.
 ```
-<link rel="stylesheet" media="all" href="{{ 'theme.css' | asset_url }}"
+<link rel="stylesheet" media="all" href="{{ 'theme.css' | asset_url }}">
 ```
 It is recommended to use <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">CSS variables</a> in your layout's head tag to provide theme settings to the rest of the css. <a href="#settings-schema">Read more about settings below.</a>
 
@@ -763,7 +779,7 @@ Note: `receiver` will use default values from settings_schema.json for local dev
         "label": "Highlight Color",
         "default": "#FFFFFF",
         "info": "Color for highlighted theme elements"
-      },
+      }
     ]
   },
   {
@@ -789,19 +805,17 @@ Note: `receiver` will use default values from settings_schema.json for local dev
     "Paper": {
       "background_color": "#FFFFFF",
       "text_color": "#1E293B",
-      "link_color": "#0369A1",
-      "tags": ["light", "high-contrast"]
+      "link_color": "#0369A1"
     },
     "Midnight": {
       "background_color": "#0F172A",
       "text_color": "#F8FAFC",
-      "link_color": "#FBBF24",
-      "tags": ["dark"]
+      "link_color": "#FBBF24"
     }
   }
 }
 ```
-Optional `tags` label a preset: `light`, `dark` or `high-contrast`. Presets show up as a row of swatches in the website configuration, named and labeled on hover. Picking one fills the matching color pickers as a starting point; the owner can adjust and save from there. The choice itself isn't stored, so presets can be renamed or removed freely.
+Presets show up as a row of swatches in the website configuration, named on hover. Picking one fills the matching color pickers as a starting point; the owner can adjust and save from there. The choice itself isn't stored, so presets can be renamed or removed freely.
 
 For settings used in css, place <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties">css variables</a> in a `<style>` tag within the `<head>` of your <a href="#layout">layout/theme.liquid</a>. These will then be accessible in included css files.
 
@@ -828,9 +842,31 @@ body {
 }
 ```
 
+## Network Themes
+
+A network theme gets `network` in place of `podcast`, plus `settings`, `page`, `linklists` and `theme`. It has three templates:
+- index.liquid at `/` - shows, paginate, latest_episodes, people
+- shows.liquid at `/shows` - shows, paginate
+- page.liquid at `/page-handle`
+
+#### network
+title, url, hide_branding, custom_css, social_links, subscribe_links, content.intro, content.footer, content.head and assets, each as on <a href="#podcast">podcast</a>.
+
+#### shows
+The network's public shows, in the network's order. Each has these <a href="#podcast">podcast</a> properties: title, artwork, description, formatted_description, keywords, feed_url, url, disable_feed, private_feed, season_count, episode_count, type, hide_branding, noindex, video_enabled, remote, email, subscribe_links and social_links.
+
+#### latest_episodes
+The five newest <a href="#episode">episodes</a> across the network, each with a `show` (title, artwork, url, multiple_seasons).
+
+#### people
+The network's hosts, merged by name across shows: name, image, social_links, path, episode_count, and `shows`, a list of role, bio, episode_count and `show` (as above). `path` is relative to the show's website: `{{ person.shows.first.show.url }}{{ person.path }}`.
+
+`content_for_header` renders components/_header, and Transistor's copy reads `podcast`. Ship your own components/_header.liquid that loads `{{ network.assets.common_js }}`, or the component JavaScript won't load. Network sites have no search, subscribe page or newsletter signup, so skip those components.
+
 ## Gotchas
 
 * Liquid treats `""` as truthy, so `{% if page.heading %}` passes on an empty string. Use `!= blank` for user-set strings.
 * `{{ field | default: 'some.key' | t }}` translates the user's own text when the field is set and renders `Translation missing: ...`. Render the field when present and translate only the fallback.
+* `search_query` is the visitor's raw input, so render it with `| escape`. Titles arrive already escaped, and `t` escapes the values it interpolates.
 * Platform icons carry their brand colour as a `fill=` attribute on the `<svg>`; a CSS `fill` on that element overrides it.
 * `content_for_header` loads the platform script (Turbo and Alpine) deferred, after your own theme script. Pages change without a full reload, so initialise on `transistor.loadingEvent` (`turbo:load`) rather than `DOMContentLoaded`, stop media on `turbo:before-cache`, and register Alpine state as `window.*` globals rather than `Alpine.data()`.
